@@ -1,172 +1,105 @@
-European Housing Price Prediction
-From Math Intuition to Baseline Machine Learning
-Overview
+🔹 European Housing Price Prediction
 
-This project demonstrates why machine learning works with numbers by building a baseline housing price prediction model on European real estate data.
+Math intuition → data → baseline ML (Month 0 project)
 
-The goal is not to achieve state-of-the-art performance, but to develop strong intuition about:
+A foundation project focused on understanding why ML works — and where it breaks — before using complex models.
 
-how real-world data becomes vectors,
+🚀 What This Project Proves
 
-how gradients enable learning,
+How real-world housing data becomes vectors and matrices
 
-and how biased data breaks models.
+Why gradients are essential for learning
 
-This repo is a Month 0 foundation project, preparing for more advanced ML and deep learning work.
+How biased datasets silently destroy model reliability
 
-Problem Statement
+Why simple models fail before complex ones should be used
 
-Housing prices in Europe vary significantly by city, size, and local conditions.
-Predicting prices is deceptively simple — until real-world issues appear:
+📊 Key Results (Read This First)
+Item	Value
+Dataset size	~10,000 rows
+Model	Linear Regression
+Initial MAE	~€50,000
+Final MAE	~€42,500
+Relative error	16.7% → 14.2%
+Urban vs suburban error gap	+21%
 
-missing values,
+⚠️ Main issue: Urban bias inflates price predictions outside major cities.
 
-skewed distributions,
+🧠 Bias & Failure Analysis (Non-Optional)
 
-and strong urban bias.
+This model fails predictably:
 
-This project answers one core question:
+Overestimates rural/suburban prices
 
-What breaks first when we apply simple ML models to real housing data — and why?
+Error variance increases with price
 
-Dataset
+Performs well only where data density is high
 
-Source: Kaggle – European Real Estate Dataset
-Rows: ~10,000 (after cleaning)
-Scope: Major EU cities
+Conclusion:
 
-Main features:
+Model accuracy improved, but generalization did not — due to dataset bias.
 
-city
+This is measured, not ignored.
 
-price
-
-square_meters
-
-bedrooms
-
-⚠️ Known limitation:
-The dataset overrepresents large cities (e.g., Paris, Berlin), with limited suburban and rural data.
-
-Bias Analysis
-
-Urban bias significantly affects model behavior.
-
-Observed errors:
-
-MAE (urban data): ~€38,000
-
-MAE (suburban subset): ~€46,000 (+21% increase)
-
-Cause:
-City-heavy sampling biases the model toward higher price ranges.
-
-Impact:
-The model systematically overestimates prices for non-urban properties.
-
-This bias is measured, not ignored.
-
-Project Structure
-├── data/
-│   └── europe_housing_prices.csv
-├── week1_math/
-│   ├── vectors_and_matrices.py
-│   ├── gradients_intuition.py
-│   └── probability_basics.py
-├── week2_data/
-│   ├── data_cleaning.py
-│   ├── visualization.py
-│   └── baseline_model.ipynb
-├── plots/
+📂 Project Structure
+├── data/                  # Raw housing dataset
+├── week1_math/             # NumPy-based math intuition
+├── week2_data/             # Data cleaning & baseline ML
+├── plots/                  # Exploratory visualizations
 └── README.md
 
-Key Learnings
-Math Intuition
+🧪 Experiments Summary
+Week 1 — Math Intuition
 
-Vectors & matrices represent features and transformations
+Vector & matrix operations (NumPy)
 
-Gradients enable learning via optimization
+Gradient approximation
 
-Chain rule explains how learning propagates through models
+Chain rule intuition
 
-Vectorization is why NumPy (and GPUs) are fast
+Probability & distributions
 
-Data & Modeling
+📌 Insight:
+Vectorization explains why ML scales — Python loops do not.
 
-Real-world data is noisy and biased
+Week 2 — Real Data & Baseline ML
 
-Median imputation outperforms mean for skewed prices
+Missing value handling (mean vs median)
 
-Simple models expose problems early — which is good
+Feature engineering (price_per_sqm)
 
-Baseline Model
+Linear regression baseline
 
-Model: Linear Regression (scikit-learn)
+MAE evaluation
 
-Features:
+📌 Insight:
+Data understanding improved performance more than any algorithm change.
 
-square meters
+❌ What Did NOT Work (Important)
 
-bedrooms
+Linear models fail on extreme prices
 
-city (one-hot encoded)
+Adding features doesn’t fix biased sampling
 
-Metric: Mean Absolute Error (MAE)
+Complexity without better data is useless
 
-Results:
+These failures justify moving to tree-based models next.
 
-Initial MAE: ~€50,000
-
-After feature engineering & outlier handling: ~€42,500
-
-Relative error reduced from 16.7% → 14.2%
-
-This improvement comes from data understanding, not model complexity.
-
-What Failed (Important)
-
-This project intentionally exposes failures:
-
-Linear regression underestimates expensive properties
-
-Error variance increases with price (heteroscedasticity)
-
-Model generalizes poorly outside major cities
-
-Adding complexity without fixing data does not help
-
-These failures justify moving to more advanced models later.
-
-Installation
+🔧 Installation
 git clone https://github.com/yourusername/european-housing-intuition.git
 pip install numpy pandas matplotlib seaborn scikit-learn
 
+🔜 Next Steps
 
-Place the dataset in the data/ directory and run scripts or notebooks.
+Tree-based models (Random Forest, XGBoost)
 
-Why This Project Matters
+Better regional balance
 
-Complex ML models are meaningless without understanding:
+Error segmentation by geography
 
-how data is represented,
+🧠 Final Takeaway
 
-where assumptions break,
+Machine learning doesn’t fail because models are weak —
+it fails because data assumptions are wrong.
 
-and how bias distorts predictions.
-
-This project builds that foundation before moving to advanced ML and deep learning.
-
-Next Steps
-
-Non-linear models (tree-based)
-
-Better handling of heteroscedastic errors
-
-Balanced datasets across regions
-
-Transition to advanced ML pipelines
-
-Final Note
-
-This repository prioritizes thinking over performance.
-If a simple model fails, the data — not the algorithm — is usually the problem.
+This project builds the intuition needed before scaling complexity.
