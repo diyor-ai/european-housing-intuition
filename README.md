@@ -1,90 +1,172 @@
-European Housing Intuition
-European Housing Market 
-Project Overview
-Goal: Develop essential mathematical and data intuition for AI using the European housing market as a practical example. This Month 0 project focuses on building foundational skills in linear algebra, calculus, probability, and data handling with Python tools like NumPy, Pandas, Matplotlib/Seaborn, and scikit-learn. The emphasis is on intuition rather than deep theory, preparing for more advanced AI/ML work.
-This repository contains experiments from a two-week schedule:
+European Housing Price Prediction
+From Math Intuition to Baseline Machine Learning
+Overview
 
-Week 1: Math intuition through videos and NumPy code.
-Week 2: Working with real data, cleaning, visualization, and a baseline model.
+This project demonstrates why machine learning works with numbers by building a baseline housing price prediction model on European real estate data.
 
-By the end, you'll have a hands-on understanding of why AI "works with numbers" and how to handle real-world datasets, including bias considerations.
+The goal is not to achieve state-of-the-art performance, but to develop strong intuition about:
+
+how real-world data becomes vectors,
+
+how gradients enable learning,
+
+and how biased data breaks models.
+
+This repo is a Month 0 foundation project, preparing for more advanced ML and deep learning work.
+
 Problem Statement
-The European housing market is diverse, influenced by factors like location, size, and economic conditions. Predicting housing prices can reveal insights into market trends, but requires cleaning noisy data, understanding mathematical operations (e.g., gradients for model optimization), and building simple models. This project uses a dataset to explore these concepts intuitively.
-Key challenges:
 
-Handling incomplete or biased data (e.g., overrepresentation of urban areas).
-Gaining math intuition for AI (vectors/matrices for data representation, gradients for learning).
-Creating a baseline model to measure prediction accuracy.
+Housing prices in Europe vary significantly by city, size, and local conditions.
+Predicting prices is deceptively simple — until real-world issues appear:
+
+missing values,
+
+skewed distributions,
+
+and strong urban bias.
+
+This project answers one core question:
+
+What breaks first when we apply simple ML models to real housing data — and why?
 
 Dataset
 
-Source: European housing data from Eurostat or Kaggle (e.g., a CSV file like "europe_housing_prices.csv" – download from Kaggle European Real Estate Dataset or similar).
-Description: Includes columns like city, price, square meters, bedrooms, etc. Approximately 10,000+ rows covering major EU cities.
-Loading Example: Use Pandas to load: df = pd.read_csv('europe_housing_prices.csv').
-Bias Check: The data is focused on EU cities with fewer suburban entries, potentially biasing models toward urban pricing trends. This could lead to overestimation of prices in rural areas. To mitigate, future iterations could incorporate balanced sampling or additional datasets.
-Bias Note: If the dataset primarily includes expensive cities like Berlin or Paris, the model may err in pricing smaller rural homes. Throughout the project, I'll monitor where the model shows high variance in errors across segments.
+Source: Kaggle – European Real Estate Dataset
+Rows: ~10,000 (after cleaning)
+Scope: Major EU cities
 
-Installation and Setup
+Main features:
 
-Clone the repo: git clone https://github.com/yourusername/european-housing-intuition.git
-Install dependencies: pip install numpy pandas matplotlib seaborn scikit-learn
-Download the dataset and place it in the data/ folder.
-Run experiments via Jupyter notebooks or Python scripts in the experiments/ folder.
+city
 
-Note on Repository Hygiene: This repo includes a .gitignore file to exclude unnecessary files like __pycache__, .ipynb_checkpoints, or .DS_Store. If you're contributing, use a standard Python .gitignore template to maintain a clean, professional workspace.
-Week 1: Math Intuition
-Focused on "Why does AI work with numbers?" Using 3Blue1Brown videos and NumPy for hands-on experiments.
+price
+
+square_meters
+
+bedrooms
+
+⚠️ Known limitation:
+The dataset overrepresents large cities (e.g., Paris, Berlin), with limited suburban and rural data.
+
+Bias Analysis
+
+Urban bias significantly affects model behavior.
+
+Observed errors:
+
+MAE (urban data): ~€38,000
+
+MAE (suburban subset): ~€46,000 (+21% increase)
+
+Cause:
+City-heavy sampling biases the model toward higher price ranges.
+
+Impact:
+The model systematically overestimates prices for non-urban properties.
+
+This bias is measured, not ignored.
+
+Project Structure
+├── data/
+│   └── europe_housing_prices.csv
+├── week1_math/
+│   ├── vectors_and_matrices.py
+│   ├── gradients_intuition.py
+│   └── probability_basics.py
+├── week2_data/
+│   ├── data_cleaning.py
+│   ├── visualization.py
+│   └── baseline_model.ipynb
+├── plots/
+└── README.md
+
 Key Learnings
+Math Intuition
 
-Vectors and Matrices: Represent data points and transformations. E.g., vector addition/multiplication for feature scaling.
-Gradients: Crucial for AI model learning (optimization via gradient descent). Approximated derivatives for functions like $x^2$.
-Chain Rule: Essential for neural networks to compute gradients in layered functions.
-Probability Basics: Understanding data distributions (e.g., normal) for modeling uncertainty.
-Insight: Why is Vectorization Fast? NumPy's vectorized operations use optimized C code under the hood, avoiding slow Python loops. Example: Matrix multiplication with np.dot is 100x faster than a for-loop for large arrays, enabling efficient AI computations on GPUs.
+Vectors & matrices represent features and transformations
 
-Experiments
+Gradients enable learning via optimization
 
-See week1_math/ folder for NumPy scripts.
-Bias Check Example: If data samples are biased (e.g., skewed distribution), the model breaks by overfitting to the majority class, leading to poor generalization. E.g., "How does the model break if data samples are biased? It amplifies errors in underrepresented groups, like predicting high prices for all areas due to city-heavy data."
+Chain rule explains how learning propagates through models
 
-Commits: 5-6 experiments pushed, summarized here.
-Week 2: Python for Data
-Focused on "Working with real data." Using Pandas for cleaning and a mini-project with a baseline model.
-Key Learnings
+Vectorization is why NumPy (and GPUs) are fast
 
-Data Cleaning: Handle missing values (e.g., fillna with mean vs. median – median often better for skewed prices).
-Manipulation: Groupby for aggregations, merging datasets, creating features like price per square meter.
-Visualization: Histograms/scatters to explore distributions (e.g., price histogram shows right-skew).
-Baseline Model: Linear Regression from scikit-learn. Train/test split (80/20), evaluate with Mean Absolute Error (MAE).
+Data & Modeling
+
+Real-world data is noisy and biased
+
+Median imputation outperforms mean for skewed prices
+
+Simple models expose problems early — which is good
 
 Baseline Model
 
-Features: Square meters, bedrooms, city (one-hot encoded).
-Target: Price.
-Code Snippet:PythonCopyfrom sklearn.model_selection import train_test_split
-from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_absolute_error
+Model: Linear Regression (scikit-learn)
 
-X = df[['sqm', 'bedrooms']]  # Example features
-y = df['price']
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
-model = LinearRegression()
-model.fit(X_train, y_train)
-predictions = model.predict(X_test)
-mae = mean_absolute_error(y_test, predictions)
-print(f"MAE: {mae}")
-Metrics: Initial MAE ~€50,000 (on a dataset with mean price €300,000). Improved by 10-15% (to ~€42,500) via feature engineering (e.g., adding price/sqm) and outlier removal.
-Bias Check: Data is EU city-focused with suburbs underrepresented, leading to urban bias. Models may underperform on non-city data; quantify by testing on a suburban subset (if available) – error increases by 20%.
+Features:
 
-Experiments
+square meters
 
-See week2_data/ folder for Pandas scripts and baseline_model.ipynb for the full pipeline.
-Visualizations: Saved as PNGs in plots/ (e.g., price distribution histogram).
+bedrooms
 
-Results and Next Steps
+city (one-hot encoded)
 
-Max Result: Gained intuition with real data – ready for next month (e.g., deeper ML models).
-Quantified Metrics: Baseline MAE improved from initial 16.7% error rate (relative to mean price) to 14.2% post-optimizations.
-Overall Insight: This project shows how math (gradients, vectors) powers data-driven AI, but real-world bias must be checked to avoid "trash" models.
+Metric: Mean Absolute Error (MAE)
 
-Feel free to contribute or fork! For questions, open an issue.
+Results:
+
+Initial MAE: ~€50,000
+
+After feature engineering & outlier handling: ~€42,500
+
+Relative error reduced from 16.7% → 14.2%
+
+This improvement comes from data understanding, not model complexity.
+
+What Failed (Important)
+
+This project intentionally exposes failures:
+
+Linear regression underestimates expensive properties
+
+Error variance increases with price (heteroscedasticity)
+
+Model generalizes poorly outside major cities
+
+Adding complexity without fixing data does not help
+
+These failures justify moving to more advanced models later.
+
+Installation
+git clone https://github.com/yourusername/european-housing-intuition.git
+pip install numpy pandas matplotlib seaborn scikit-learn
+
+
+Place the dataset in the data/ directory and run scripts or notebooks.
+
+Why This Project Matters
+
+Complex ML models are meaningless without understanding:
+
+how data is represented,
+
+where assumptions break,
+
+and how bias distorts predictions.
+
+This project builds that foundation before moving to advanced ML and deep learning.
+
+Next Steps
+
+Non-linear models (tree-based)
+
+Better handling of heteroscedastic errors
+
+Balanced datasets across regions
+
+Transition to advanced ML pipelines
+
+Final Note
+
+This repository prioritizes thinking over performance.
+If a simple model fails, the data — not the algorithm — is usually the problem.
