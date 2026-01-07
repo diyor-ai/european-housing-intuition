@@ -14,3 +14,17 @@ print("Dot product is " ,dot_prod)
 
 norm_vec = np.linalg.norm(vec1)
 print("Norm of the vector is " ,norm_vec)
+
+House_A = np.array([120,3,400000])
+
+new_House = House_A * 2
+
+print("House A is " ,new_House)
+
+arr = np.array([1,2,3,4,5])
+print(arr)
+
+print(type(arr))
+
+dior = np.array([2, 4, 6]) * np.array([2, 4, 7])
+print(dior)
