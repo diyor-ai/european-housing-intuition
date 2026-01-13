@@ -1,22 +1,16 @@
 import pandas as pd
 
-# CSV yuklash
-df = pd.read_csv("../house-prices-advanced-regression-techniques/train.csv")  # yoki Eurostat CSV
-print("DataFrame yuklandi. Shape:", df.shape)  # (row soni, column soni)
-print("Birinchi 5 qator:")
-print(df.head())  # 5 ta birinchi qator
-print("\nOxirgi 5 qator:")
-print(df.tail())  # Oxirgi 5 qator
+# 1. Datasetni yukla
+df = pd.read_csv('../house-prices-advanced-regression-techniques/train.csv')
 
-print("Asosiy statistika:")
-print(df.describe())  # mean, std, min, max, quartiles
+# 2. Ilk ko'zdan kechirish
+print("Dataset ko'rinishi:")
+print(df.head())
 
-# Missing values check
-print("Missing values soni:", df.isnull().sum())
+print("\nDataset statistikasi:")
+print(df.describe())
 
-# Column types
-print("Column turlari:\n", df.dtypes)
-
-# Narx column statistikasi (agar 'SalePrice' bo'lsa)
-if 'SalePrice' in df.columns:
-    print("Narx statistikasi:\n", df['SalePrice'].describe())
+# 3. Faqat bitta ustunni statistik ko'rish
+if 'price' in df.columns:
+    print("\nNarxlar statistikasi:")
+    print(df['price'].describe())
