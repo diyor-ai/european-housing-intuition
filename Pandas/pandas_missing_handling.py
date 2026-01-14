@@ -9,6 +9,13 @@ print(new_df.to_string())
 
 # Note: By default, the dropna() method returns a new DataFrame, and will not change the original.
 
+#Discovering Duplicates
+print(df.duplicated())
+
+#Removing Duplicates
+df.drop_duplicates(inplace=True)
+
+
 """
 Remove all rows with NULL values:
 
@@ -50,3 +57,25 @@ print(f" Median value of SalePrice column is {y}")
 z = df['SalePrice'].mode()[0]
 df.fillna({'SalePrice': z}, inplace=True)
 print(f" Mode value of SalePrice column is {z}")
+
+
+# Original LotFrontage stats
+print("Original LotFrontage stats:")
+print(df['LotFrontage'].describe())
+
+# Mean bilan to'ldirish
+df_mean = df.copy()
+mean_lf = df['LotFrontage'].mean()
+df_mean['LotFrontage'] = df_mean['LotFrontage'].fillna(mean_lf)
+print(f"\nMean bilan to'ldirilgan (mean={mean_lf:.2f}):")
+print(df_mean['LotFrontage'].describe())
+
+# Median bilan to'ldirish
+df_median = df.copy()
+median_lf = df['LotFrontage'].median()
+df_median['LotFrontage'] = df_median['LotFrontage'].fillna(median_lf)
+print(f"\nMedian bilan to'ldirilgan (median={median_lf:.2f}):")
+print(df_median['LotFrontage'].describe())
+
+# Insight
+print("\nInsight: Mean outlierlarga sezgir (max 313), median esa mustahkamroq.")
