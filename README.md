@@ -86,7 +86,7 @@ Complexity without better data is useless
 These failures justify moving to tree-based models next.
 
 🔧 Installation
-git clone https://github.com/yourusername/european-housing-intuition.git
+git clone https://github.com/diyor-ai/european-housing-intuition.git
 pip install numpy pandas matplotlib seaborn scikit-learn
 
 🔜 Next Steps
