@@ -1,7 +1,10 @@
+from pathlib import Path
+
 import pandas as pd
 
 # first we load dataset
-df = pd.read_csv('../house-prices-advanced-regression-techniques/train.csv')
+DATA_PATH = Path(__file__).resolve().parents[2] / "data" / "train.csv"
+df = pd.read_csv(DATA_PATH)
 
 new_df = df.dropna()
 
