@@ -171,6 +171,7 @@ def run(sample: bool = False) -> dict:
         REPORTS.mkdir(exist_ok=True)
         (REPORTS / "results.md").write_text(md)
         cv.drop(columns=["best_params"]).to_csv(REPORTS / "cv_results.csv", index=False)
+        pd.DataFrame(final["table"]).T.rename_axis("model").to_csv(REPORTS / "test_results.csv")
     print(md)
     return {"cv": cv, "choice": choice, "final": final}
 
