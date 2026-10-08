@@ -1,27 +1,33 @@
-import numpy as np
 import time
 
-# 1. Matritsalarni yaratish (2x2 dan boshla, keyin 500x500 ga o'zgartir)
-size = 3
-A = np.random.rand(size, size, size, size)
-B = np.random.rand(size, size, size, size)
+import numpy as np
 
-print(f"A matrisa {A}")
-print(f"B matrisa {B}")
-# # --- 1-usul: For loop (Eski va sekin usul) ---
-# start_for = time.time()
-# C_for = np.zeros((size, size))
-# # Diqqat: Bu qism 500x500 da bir necha soniya olishi mumkin!
-# for i in range(size):
-#     for j in range(size):
-#         for k in range(size):
-#             C_for[i][j] += A[i][k] * B[k][j]
-# print(f"For-loop vaqti: {time.time() - start_for:.4f} sek")
+# 1. Matritsalarni yaratish (2-D, size x size)
+size = 200
+rng = np.random.default_rng(42)
+A = rng.random((size, size))
+B = rng.random((size, size))
 
-# --- 2-usul: NumPy (Zamonaviy va tezkor) ---
-start_np = time.time()
-C_np = A @ B  # @ belgisi np.dot(A, B) bilan bir xil
-print(f"NumPy vaqti: {time.time() - start_np:.4f} sek")
+if size <= 5:
+    print(f"A matrisa:\n{A}")
+    print(f"B matrisa:\n{B}")
 
-# # Tekshirish: Ikkala natija bir xilmi?
-# print(f"Natijalar bir xilmi? {np.allclose(C_for, C_np)}")
+# --- 1-usul: For loop (eski va sekin usul) ---
+start_for = time.perf_counter()
+C_for = np.zeros((size, size))
+for i in range(size):
+    for j in range(size):
+        for k in range(size):
+            C_for[i][j] += A[i][k] * B[k][j]
+time_for = time.perf_counter() - start_for
+print(f"For-loop vaqti: {time_for:.4f} sek")
+
+# --- 2-usul: NumPy (zamonaviy va tezkor) ---
+start_np = time.perf_counter()
+C_np = A @ B  # @ belgisi matritsa ko'paytmasi (np.matmul)
+time_np = time.perf_counter() - start_np
+print(f"NumPy vaqti: {time_np:.6f} sek")
+
+# Tekshirish: ikkala natija bir xilmi?
+print(f"Natijalar bir xilmi? {np.allclose(C_for, C_np)}")
+print(f"NumPy taxminan {time_for / time_np:,.0f}x tezroq")
