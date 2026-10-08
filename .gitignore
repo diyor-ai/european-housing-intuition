@@ -12,3 +12,6 @@ __pycache__/
 data/
 house-prices-advanced-regression-techniques/
 models/
+
+# Private study notes (not published)
+INTERVIEW_NOTES.md
