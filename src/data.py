@@ -44,6 +44,14 @@ def load_data() -> pd.DataFrame:
         ) from exc
 
 
+def outlier_mask(X: pd.DataFrame, y: pd.Series) -> pd.Series:
+    """The 2 known 'huge but cheap' houses (GrLivArea > 4000 sqft, price < $300k).
+
+    Both are partial sales (see notebooks/01_eda.ipynb).
+    """
+    return (X["GrLivArea"] > 4000) & (y < 300_000)
+
+
 def split_data(df: pd.DataFrame):
     """The one fixed train/test split (80/20, random_state=42).
 
