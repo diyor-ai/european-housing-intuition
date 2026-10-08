@@ -6,13 +6,19 @@ from sklearn.base import clone
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 from sklearn.model_selection import KFold
 
-from src.data import RANDOM_STATE
+from src.data import RANDOM_STATE, outlier_mask
 
 N_SPLITS = 5
 
 
 def rmsle(y_true, y_pred) -> float:
-    """Kaggle's metric: RMSE on log1p prices. Negative predictions are clipped to 0."""
+    """Kaggle's metric: RMSE on log1p prices.
+
+    log1p is undefined for values <= -1, so negative predictions (possible with
+    linear models on raw prices) are CLIPPED AT 0 before the log. Clipping makes a
+    negative prediction count as a $0 prediction, i.e. log1p(0)=0 vs log1p(y_true) —
+    a large but finite error — instead of NaN. MAE/RMSE/R2 use the raw predictions.
+    """
     y_pred = np.clip(y_pred, 0, None)
     return float(np.sqrt(mean_squared_error(np.log1p(y_true), np.log1p(y_pred))))
 
@@ -34,9 +40,11 @@ def cross_validate_model(model, X, y, n_splits: int = N_SPLITS) -> dict:
     """K-fold CV; the whole pipeline is re-fitted on each fold's training part.
 
     Returns mean and std of every metric over folds, plus mean fit time (s).
+    If the model is a GridSearchCV, the tuning happens INSIDE each outer fold (nested CV),
+    so the scores are not inflated by hyper-parameter selection.
     """
     kf = make_kfold(n_splits)
-    rows, times, n_neg = [], [], 0
+    rows, times, n_neg, params = [], [], 0, []
     for tr, va in kf.split(X):
         m = clone(model)
         t0 = time.perf_counter()
@@ -44,7 +52,12 @@ def cross_validate_model(model, X, y, n_splits: int = N_SPLITS) -> dict:
         times.append(time.perf_counter() - t0)
         pred = m.predict(X.iloc[va])
         n_neg += int((pred < 0).sum())
-        rows.append(all_metrics(y.iloc[va], pred))
+        r = all_metrics(y.iloc[va], pred)
+        keep = ~outlier_mask(X.iloc[va], y.iloc[va]).to_numpy()
+        r["RMSLE_no_outliers"] = rmsle(y.iloc[va][keep], pred[keep])
+        rows.append(r)
+        if hasattr(m, "best_params_"):
+            params.append(m.best_params_)
     out = {}
     for k in rows[0]:
         vals = np.array([r[k] for r in rows])
@@ -52,5 +65,6 @@ def cross_validate_model(model, X, y, n_splits: int = N_SPLITS) -> dict:
         out[k + "_std"] = float(vals.std())
     out["R2_worst_fold"] = float(min(r["R2"] for r in rows))
     out["n_negative_preds"] = n_neg
+    out["best_params"] = params
     out["fit_time"] = float(np.mean(times))
     return out
