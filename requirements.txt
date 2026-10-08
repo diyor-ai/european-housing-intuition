@@ -1,7 +1,7 @@
-numpy
-pandas
-scikit-learn
-matplotlib
-seaborn
-jupyter
-pytest
+jupyter==1.1.1
+matplotlib==3.11.2
+numpy==2.4.6
+pandas==3.0.6
+pytest==9.1.1
+scikit-learn==1.9.1
+seaborn==0.13.2
