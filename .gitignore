@@ -11,3 +11,4 @@ __pycache__/
 # Data (downloaded / cached locally, not versioned)
 data/
 house-prices-advanced-regression-techniques/
+models/
