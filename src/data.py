@@ -7,6 +7,7 @@ from pathlib import Path
 
 import pandas as pd
 from sklearn.datasets import fetch_openml
+from sklearn.model_selection import train_test_split
 
 DATA_DIR = Path(__file__).resolve().parents[1] / "data"
 CACHE_FILE = DATA_DIR / "ames_openml.csv"
@@ -15,6 +16,8 @@ KAGGLE_FILE = DATA_DIR / "train.csv"
 # pandas' default NA list would silently turn "None" into NaN.
 CSV_KWARGS = {"keep_default_na": False, "na_values": ["NA", ""]}
 TARGET = "SalePrice"
+RANDOM_STATE = 42
+TEST_SIZE = 0.2
 
 
 def _from_openml() -> pd.DataFrame:
@@ -41,7 +44,20 @@ def load_data() -> pd.DataFrame:
         ) from exc
 
 
+def split_data(df: pd.DataFrame):
+    """The one fixed train/test split (80/20, random_state=42).
+
+    Returns X_train, X_test, y_train, y_test. The test set must only be
+    touched once, at the very end.
+    """
+    X = df.drop(columns=[TARGET, "Id"], errors="ignore")
+    y = df[TARGET]
+    return train_test_split(X, y, test_size=TEST_SIZE, random_state=RANDOM_STATE)
+
+
 if __name__ == "__main__":
     frame = load_data()
     print(f"Shape: {frame.shape}")
+    X_tr, X_te, _, _ = split_data(frame)
+    print(f"Train: {X_tr.shape}, Test: {X_te.shape}")
     print(f"SalePrice median: ${frame[TARGET].median():,.0f}")
