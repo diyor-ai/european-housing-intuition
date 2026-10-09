@@ -53,9 +53,11 @@ fixed 80/20 split (random_state=42)
         |                                                         |
         v                                                         |
 Pipeline (fitted on training rows only):                          |
-  add_features -> LotFrontage by Neighborhood median ->           |
+  add_features (absent-feature NaN -> "None" category) ->         |
+  LotFrontage by Neighborhood median ->                           |
   ColumnTransformer[numeric: median impute + scale,               |
-                    categorical: most-frequent impute + one-hot]  |
+                    categorical: most-frequent impute             |
+                    (true NaNs only) + one-hot]                   |
   -> model, with target log1p(price)                              |
         |                                                         |
         v                                                         |
@@ -104,6 +106,7 @@ foundations/    early NumPy / Pandas practice scripts
 - Hyper-parameter grids are small; for RandomForest and gradient boosting the best values sit at the edge of the grid (`max_features=0.3`, `min_samples_leaf=1`, `max_depth=3`), so a wider search might help a little.
 - Only 292 test houses, and top models are within fold-to-fold noise of each other (see the comparison table).
 - Features are what the dataset provides; no listing text, photos or exact location.
+- During development the test metrics of one model were printed once by mistake; no decision used them (selection was by CV only).
 
 ## Foundations
 
